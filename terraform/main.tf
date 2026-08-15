@@ -7,7 +7,7 @@ resource "aws_vpc" "ai_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = { Name = "AI-VPC" }
+  tags                 = { Name = "AI-VPC" }
 }
 
 resource "aws_subnet" "public" {
@@ -16,7 +16,7 @@ resource "aws_subnet" "public" {
   cidr_block              = cidrsubnet(aws_vpc.ai_vpc.cidr_block, 8, count.index)
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
-  tags = { Name = "Public-Subnet-${count.index}" }
+  tags                    = { Name = "Public-Subnet-${count.index}" }
 }
 
 resource "aws_subnet" "private" {
@@ -24,13 +24,13 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.ai_vpc.id
   cidr_block        = cidrsubnet(aws_vpc.ai_vpc.cidr_block, 8, count.index + 10)
   availability_zone = data.aws_availability_zones.available.names[count.index]
-  tags = { Name = "Private-Subnet-${count.index}" }
+  tags              = { Name = "Private-Subnet-${count.index}" }
 }
 
 # 2. Gateways & Routing
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.ai_vpc.id
-  tags = { Name = "AI-IGW" }
+  tags   = { Name = "AI-IGW" }
 }
 
 resource "aws_eip" "nat_eip" {
@@ -40,7 +40,7 @@ resource "aws_eip" "nat_eip" {
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public[0].id
-  tags = { Name = "AI-NAT" }
+  tags          = { Name = "AI-NAT" }
   depends_on    = [aws_internet_gateway.igw]
 }
 
@@ -102,7 +102,7 @@ resource "aws_security_group" "bastion_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] 
+    cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     from_port   = 0
@@ -169,7 +169,7 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids      = [aws_security_group.bastion_sg.id]
   key_name                    = aws_key_pair.lab_key.key_name
   associate_public_ip_address = true
-  tags = { Name = "AI-Bastion-Host" }
+  tags                        = { Name = "AI-Bastion-Host" }
 }
 
 # 5. Compute Instance (CPU + LightGBM by default; GPU + vLLM optional via var.enable_gpu)
