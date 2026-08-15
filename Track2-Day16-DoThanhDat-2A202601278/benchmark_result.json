@@ -1,0 +1,38 @@
+{
+  "timestamp_utc": "2026-08-14T10:32:50.080475+00:00",
+  "dataset": {
+    "path": "creditcard.csv",
+    "rows": 284807,
+    "features": 30,
+    "positive_rows": 492,
+    "positive_rate": 0.00172749
+  },
+  "split": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "train_rows": 227845,
+    "test_rows": 56962,
+    "split_seconds": 0.204296
+  },
+  "model": {
+    "type": "LGBMClassifier",
+    "n_estimators_requested": 300,
+    "best_iteration": 300
+  },
+  "timing": {
+    "data_load_seconds": 1.774305,
+    "training_seconds": 8.916752,
+    "inference_latency_one_row_ms": 1.229026,
+    "inference_throughput_rows_per_second": 67804.29,
+    "throughput_batch_rows": 1000,
+    "throughput_batch_seconds": 0.014748,
+    "latency_runs": 1000
+  },
+  "metrics": {
+    "auc_roc": 0.919704,
+    "accuracy": 0.999192,
+    "f1_score": 0.762887,
+    "precision": 0.770833,
+    "recall": 0.755102
+  }
+}
